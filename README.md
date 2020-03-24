@@ -15,7 +15,8 @@ _**Note:**_ The results are quoted from the tests conducted to process a single 
 The Kit includes only 2 EVEs + 2 DSPs. The AM5729 on the other side has 4 EVEs + 2 DSPs.
 
 * The JacintoNet11 v2 model has 14 _equivalent_ layers and the YOLO v2-tiny has 17 equivalent layers. This is when we heuristically draw the equivalent model. In this, the _batchNormalization_ layer is considered as a separate layer and not coalesced into a single layer like _Convolution+Relu_. The actual equivalent model can only be obtained using the [Model Visualizer Tool]() in TIDL. It is likely that the _batchNormalization_ layer is coalesced and the number of layers drops to 10.
-![JacintoNet11v2]() and ![yolov2tiny]()
+
+![JacintoNet11v2](https://github.com/PrashantDandriyal/GSoC2020_YOLOModelsOnTheBB_AI/blob/master/Jacinto11v2.png) and ![yolov2tiny](https://github.com/PrashantDandriyal/GSoC2020_YOLOModelsOnTheBB_AI/blob/master/yolov2Tiny_arch.png)
 
 * Unlike the above quoted demo case, layer grouping for our model shall differ. We create layer groups in 2 ways. The approach giving better performance is chosen. The determining factor is the frame execution time of any _EVE_ (`exec_time_eve`)and a _DSP_(`exec_time_dsp`).
 
@@ -26,13 +27,13 @@ else
 	use Approach_2
 ```
 
-** Approach 1: One _Execution Object_ (EO) per _Execution Object Pipeline_ (EOP) 
+ 1) Approach 1: One _Execution Object_ (EO) per _Execution Object Pipeline_ (EOP) 
 
  Process 1 frame per _EO_ or 1 per _EOP_ (4 EVEs and 2 DSPs). This means 6 frames per EO. Above mentioned demo uses 2 EVEs + 2 DSPs (4 _EOs_) but not for distibuting frames but for layer grouping. Hence, the overall effect is that of a single frame at a time. This method doesn't leverage the layer grouping. The expected performance is 6x (10ms+2ms API overhead). The method is memory intensive beacause each _EO_ is alloted input and output buffer individually. 
 
 Network heap size : `64MB/EO x 6 EO = 384MB`
 
-**Approach 2: Double Buffering all _EVEs_
+ 2) Approach 2: Double Buffering all _EVEs_
 
 The second approach is similar to the one adopted in the demo, but the DSPs are replaced with additional EVEs. The pipelining used in the demo can be used to understand this approach also.
 
