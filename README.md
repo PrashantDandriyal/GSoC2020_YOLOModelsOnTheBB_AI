@@ -41,7 +41,7 @@ Network heap size : `64MB/EO x 6 EO = 384MB`
 
 The second approach is similar to the one adopted in the demo, but the DSPs are replaced with additional EVEs. The pipelining used in the demo can be used to understand this approach also.
 
-![Demo on AM5749](http://downloads.ti.com/mctools/esd/docs/tidl-api/_images/tidl-frame-across-eos-opt.png)
+![Demo](https://github.com/PrashantDandriyal/GSoC2020_YOLOModelsOnTheBB_AI/blob/master/eops_pipeline.png)
 
 The TIDL device translation tool assigns layer group ids to layers during the translation process. But if the assignment fails to distribute the layers evenly, we use explicit grouping using the configuration file or the main cpp file. In this, for each frame, the first few layers (preferrably half of them) are grouped to be executed on EVE0 and the remaining half are grouped to run on EVE1. Similarly for the other frame on EVE3 and EVE 4. There are 4 _EOs_ (4 EVEs and 0 DSPs) and 2 _EOPs_ (Each _EOP_ contains a pair of EVE). We process 1 frame per _EOP_, so 2 frames at a time. A good performance is expected due to the  distribution of overload between the EVEs and use  [_double buffering_](http://downloads.ti.com/mctools/esd/docs/tidl-api/using_api.html#using-eops-for-double-buffering). 
 
