@@ -1,0 +1,23 @@
+# 1 : TensorFlow
+modelType = 1
+
+# 0: Fixed quantization By tarininng Framework,
+quantizationStyle = 1
+
+# Specify sparse convolution
+Conv2dKernelType = 0
+
+# Fold Batch Normalization Layer into TIDL Lib Conv Layer
+foldBnInConv2D     = 1
+numFrames   = 1
+preProcType = 0
+
+sampleInData   = "../input/preproc_0_416x416.y"
+
+# Translated network stored into two files
+outputNetFile      = "../cfg/net_yolov2tiny.bin"
+outputParamsFile   = "../cfg/param_yolov2tiny.bin"
+
+inWidth = 416
+inHeight = 416
+inNumChannels = 3
