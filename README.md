@@ -32,7 +32,8 @@ else
  **1) Approach 1: One _Execution Object_ (EO) per frame with (Only EVEs)** 
 
  Process 1 frame per _EO_ or 1 per _EOP_ (4 EVEs and 2 DSPs). This means 6 frames per EO. Above mentioned demo uses 2 EVEs + 2 DSPs (4 _EOs_) but not for distibuting frames but for layer grouping. Hence, the overall effect is that of a single frame at a time. This method doesn't leverage the layer grouping. The expected performance is 6x (10ms+2ms API overhead). The method is memory intensive beacause each _EO_ is alloted input and output buffer individually. The source code is developed assuming pre-processed input data is available. In all other cases, OpenCV tools are readily available to do so.
- Source Code: [aproach_1]()
+
+Source Code: [aproach_1]()
 
 Network heap size : `64MB/EO x 6 EO = 384MB`
 
@@ -43,6 +44,7 @@ The second approach is similar to the one adopted in the demo, but the DSPs are 
 ![Demo on AM5749](http://downloads.ti.com/mctools/esd/docs/tidl-api/_images/tidl-frame-across-eos-opt.png)
 
 The TIDL device translation tool assigns layer group ids to layers during the translation process. But if the assignment fails to distribute the layers evenly, we use explicit grouping using the configuration file or the main cpp file. In this, for each frame, the first few layers (preferrably half of them) are grouped to be executed on EVE0 and the remaining half are grouped to run on EVE1. Similarly for the other frame on EVE3 and EVE 4. There are 4 _EOs_ (4 EVEs and 0 DSPs) and 2 _EOPs_ (Each _EOP_ contains a pair of EVE). We process 1 frame per _EOP_, so 2 frames at a time. A good performance is expected due to the  distribution of overload between the EVEs and use  [_double buffering_](http://downloads.ti.com/mctools/esd/docs/tidl-api/using_api.html#using-eops-for-double-buffering). 
+
 Source Code: [aproach_2]()
 
 
