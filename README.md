@@ -27,13 +27,13 @@ else
 	use Approach_2
 ```
 
- **1) Approach 1: One _Execution Object_ (EO) per _Execution Object Pipeline_ (EOP)** 
+ **1) Approach 1: One _Execution Object_ (EO) per frame with (Only EVEs)** 
 
  Process 1 frame per _EO_ or 1 per _EOP_ (4 EVEs and 2 DSPs). This means 6 frames per EO. Above mentioned demo uses 2 EVEs + 2 DSPs (4 _EOs_) but not for distibuting frames but for layer grouping. Hence, the overall effect is that of a single frame at a time. This method doesn't leverage the layer grouping. The expected performance is 6x (10ms+2ms API overhead). The method is memory intensive beacause each _EO_ is alloted input and output buffer individually. 
 
 Network heap size : `64MB/EO x 6 EO = 384MB`
 
-  **2) Approach 2: Double Buffering on all _EVEs_**
+  **2) Approach 2: Two _EO_ per frame using Double Buffering (EVEs+DSPs)**
 
 The second approach is similar to the one adopted in the demo, but the DSPs are replaced with additional EVEs. The pipelining used in the demo can be used to understand this approach also.
 
